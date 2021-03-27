@@ -3,6 +3,7 @@ package com.example.autoforum.user;
 import javax.persistence.*;
 
 import com.example.autoforum.comment.Comment;
+import com.example.autoforum.favorite.Favorite;
 import com.example.autoforum.role.Role;
 import com.example.autoforum.post.Post;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,6 +45,9 @@ public class User {
 
     @OneToMany(mappedBy="userId")
     private Set<Comment> comments;
+
+    @OneToMany(mappedBy="userId")
+    private Set<Favorite> favorites;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -1,10 +1,13 @@
 package com.example.autoforum.post;
 
+import com.example.autoforum.category.Category;
+import com.example.autoforum.favorite.Favorite;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -24,6 +27,13 @@ public class Post {
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
     private Post userId;
+
+    @OneToMany(mappedBy="postId")
+    private Set<Favorite> favorites;
+
+    @ManyToOne
+    @JoinColumn(name="category_id", nullable = false)
+    private Category categoryId;
 
     @CreationTimestamp
     @Column(name = "created_at")

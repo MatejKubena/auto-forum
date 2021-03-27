@@ -1,4 +1,6 @@
 package com.example.autoforum.favorite;
 
-public interface FavoriteRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface FavoriteRepository extends JpaRepository<Favorite, Integer> {
 }
