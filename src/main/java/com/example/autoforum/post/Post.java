@@ -32,4 +32,7 @@ public class Post {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    public Post() {
+    }
 }
