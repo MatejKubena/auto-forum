@@ -3,9 +3,12 @@ package com.example.autoforum.user;
 import javax.persistence.*;
 
 import com.example.autoforum.comment.Comment;
-import com.example.autoforum.favorite.Favorite;
 import com.example.autoforum.role.Role;
 import com.example.autoforum.post.Post;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 public class User {
 
     @Id
@@ -38,16 +42,23 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
+    @JsonBackReference(value="role-user")
     private Role roleId;
 
     @OneToMany(mappedBy="userId")
+    @JsonManagedReference(value="user-post")
     private Set<Post> posts;
 
     @OneToMany(mappedBy="userId")
+    @JsonManagedReference(value="user-comment")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy="userId")
-    private Set<Favorite> favorites;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "favorite",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "post_id"))
+//    private Set<Post> favoritePosts;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -58,13 +69,6 @@ public class User {
     private Timestamp updatedAt;
 
     public User() {
-    }
-
-    public User(String username, String password, boolean enabled, Role roleId) {
-        this.username = username;
-        this.password = password;
-        this.enabled = enabled;
-        this.roleId = roleId;
     }
 
     public int getId() {
@@ -106,6 +110,50 @@ public class User {
     public void setRoleId(Role roleId) {
         this.roleId = roleId;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+//    public Set<Post> getFavoritePosts() {
+//        return favoritePosts;
+//    }
+//
+//    public void setFavoritePosts(Set<Post> favoritePosts) {
+//        this.favoritePosts = favoritePosts;
+//    }
 
     public Timestamp getCreatedAt() {
         return createdAt;

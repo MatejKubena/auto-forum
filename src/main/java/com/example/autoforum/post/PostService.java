@@ -1,5 +1,6 @@
 package com.example.autoforum.post;
 
+import com.example.autoforum.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,9 @@ public class PostService {
 
     public void deletePost(int id) {
         postRepository.deleteById(id);
+    }
+
+    public List<Post> getAllPostsByCategoryId(Category category) {
+        return new ArrayList<>(postRepository.findPostsByCategoryId(category));
     }
 }

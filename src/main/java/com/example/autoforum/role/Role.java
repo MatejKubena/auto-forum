@@ -1,6 +1,7 @@
 package com.example.autoforum.role;
 
 import com.example.autoforum.user.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,6 +22,7 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy="roleId")
+    @JsonManagedReference(value="role-user")
     private Set<User> users;
 
     @CreationTimestamp

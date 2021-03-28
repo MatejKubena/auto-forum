@@ -35,4 +35,8 @@ public class CommentService {
     public void deleteComment(int id) {
         commentRepository.deleteById(id);
     }
+
+    public List<Comment> getAllCommentsByUserId(int id) {
+        return new ArrayList<>(commentRepository.findCommentsByUserId(id));
+    }
 }

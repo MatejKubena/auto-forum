@@ -17,7 +17,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public void addPost(User user) {
+    public void addUser(User user) {
         userRepository.save(user);
     }
 
@@ -28,4 +28,5 @@ public class UserService {
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
+
 }
