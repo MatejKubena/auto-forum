@@ -30,7 +30,7 @@ public class Post {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id", nullable = false)
     @JsonBackReference(value="user-post")
     private User userId;
@@ -39,7 +39,7 @@ public class Post {
     @JsonManagedReference(value="post-comment")
     private Set<Comment> comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="category_id", nullable = false)
     @JsonBackReference(value="category-post")
     private Category categoryId;

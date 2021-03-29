@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class PostController {
@@ -67,6 +69,25 @@ public class PostController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok().header("Content-Type", "application/json").body(postService.getPost(id));
+        }
+    }
+
+    @GetMapping(path = "/search/{param}", produces = "application/json")
+    public ResponseEntity<?> getSearch(@PathVariable String param) {
+
+        List<Post> allPostsCompare = postService.getAllPosts();
+        ArrayList<Post> tempPostsCompare = new ArrayList<>();
+
+        for (var postInstance: allPostsCompare) {
+            if (postInstance.getTitle().toLowerCase().contains(param.toLowerCase())) {
+                tempPostsCompare.add(postInstance);
+            }
+        }
+
+        if (tempPostsCompare.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(tempPostsCompare);
         }
     }
 

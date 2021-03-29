@@ -35,7 +35,7 @@ public class UserController {
         this.postService = postService;
     }
 
-    @GetMapping(path = "/user/{id}", produces = "application/json")
+    @GetMapping(path = "/user/?id={id}", produces = "application/json")
     public ResponseEntity<?> getUser(@PathVariable int id) {
         if (userService.getUser(id) == null) {
             return ResponseEntity.notFound().build();
@@ -44,18 +44,67 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "/login", consumes = "multipart/form-data", produces = "application/json")
+    public ResponseEntity<?> getUserLogin(@RequestPart String usernameLogin, @RequestPart String passwordLogin) {
+
+        List<User> allUsersCompare = userService.getAllUsers();
+
+        for (var userInstance: allUsersCompare) {
+            if (userInstance.getUsername().equals(usernameLogin) && userInstance.getPassword().equals(passwordLogin) && userInstance.getEnabled()) {
+                return ResponseEntity.ok().header("Content-Type", "application/json").body(userInstance.getId());
+            }
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
     @PostMapping(path = "/user", consumes = "multipart/form-data")
     public ResponseEntity<?> addUser(@RequestPart User user, @RequestPart MultipartFile picture) throws URISyntaxException, IOException {
-        if (user == null) {
-            return ResponseEntity.unprocessableEntity().build();
-        } else {
-            user.setPicture(picture.getBytes());
-            LOGGER.info(user.toString());
+        
+        List<User> allUsersCompare = userService.getAllUsers();
 
-            URI location = new URI("http://www.concretepage.com/");
-            userService.addUser(user);
-            return ResponseEntity.created(location).build();
+        for (var userInstance: allUsersCompare) {
+            if (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername())) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
         }
+
+        user.setPicture(picture.getBytes());
+        LOGGER.info(user.toString());
+
+        URI location = new URI("http://www.concretepage.com/");
+        userService.addUser(user);
+        return ResponseEntity.created(location).build();
+        
+//        if (user == null) {
+//            return ResponseEntity.unprocessableEntity().build();
+//        } else {
+//            user.setPicture(picture.getBytes());
+//            LOGGER.info(user.toString());
+//
+//            URI location = new URI("http://www.concretepage.com/");
+//            userService.addUser(user);
+//            return ResponseEntity.created(location).build();
+//        }
+    }
+
+    @PostMapping(path = "/register", consumes = "multipart/form-data")
+    public ResponseEntity<?> addUserRegister(@RequestPart User user, @RequestPart MultipartFile picture) throws URISyntaxException, IOException {
+
+        List<User> allUsersCompare = userService.getAllUsers();
+
+        for (var userInstance: allUsersCompare) {
+            if (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername())) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+        }
+
+        user.setPicture(picture.getBytes());
+        LOGGER.info(user.toString());
+
+        URI location = new URI("http://www.concretepage.com/");
+        userService.addUser(user);
+        return ResponseEntity.created(location).build();
     }
 
 //    @PostMapping(path = "/user", consumes = "application/json")
@@ -71,16 +120,30 @@ public class UserController {
 
     @PutMapping(path = "/user/{id}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
-        User existingUser = userService.getUser(id);
-        if (existingUser == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            user.setPicture(picture.getBytes());
-            LOGGER.info(user.toString());
-            user.setId(id);
-            userService.updateUser(id, user);
-            return ResponseEntity.ok().build();
+//        User existingUser = userService.getUser(id);
+//        if (existingUser == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            user.setPicture(picture.getBytes());
+//            LOGGER.info(user.toString());
+//            user.setId(id);
+//            userService.updateUser(id, user);
+//            return ResponseEntity.ok().build();
+//        }
+
+        List<User> allUsersCompare = userService.getAllUsers();
+
+        for (var userInstance: allUsersCompare) {
+            if (!(userInstance.getId() == id) && (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername()))) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
         }
+
+        user.setPicture(picture.getBytes());
+        LOGGER.info(user.toString());
+        user.setId(id);
+        userService.updateUser(id, user);
+        return ResponseEntity.ok().build();
     }
 
 //    @PutMapping(path = "/user/{id}", consumes = "application/json")
