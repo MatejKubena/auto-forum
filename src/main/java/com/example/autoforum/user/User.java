@@ -11,8 +11,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
@@ -34,6 +37,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Lob
     @Column(name = "picture", nullable = false)
     private byte[] picture;
 
@@ -70,6 +74,19 @@ public class User {
 
     public User() {
     }
+
+    public User(int id) {
+        this.id = id;
+    }
+
+//    public User(String username, String password, String email, boolean enabled, Role roleId) throws IOException {
+//        this.username = username;
+//        this.password = password;
+//        this.email = email;
+//        this.enabled = enabled;
+//        this.roleId = roleId;
+//    }
+
 
     public int getId() {
         return id;
@@ -169,6 +186,23 @@ public class User {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+//                ", picture=" + Arrays.toString(picture) +
+                ", enabled=" + enabled +
+                ", roleId=" + roleId +
+                ", posts=" + posts +
+                ", comments=" + comments +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
 

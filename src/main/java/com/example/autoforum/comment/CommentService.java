@@ -1,5 +1,6 @@
 package com.example.autoforum.comment;
 
+import com.example.autoforum.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
-    public List<Comment> getAllCommentsByUserId(int id) {
-        return new ArrayList<>(commentRepository.findCommentsByUserId(id));
+    public List<Comment> getAllCommentsByUserId(User user) {
+        return new ArrayList<>(commentRepository.findCommentsByUserId(user));
     }
 }
