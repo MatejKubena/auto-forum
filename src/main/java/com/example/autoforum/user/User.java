@@ -8,16 +8,12 @@ import com.example.autoforum.post.Post;
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 public class User {
 
     @Id
@@ -76,15 +72,6 @@ public class User {
     public User(int id) {
         this.id = id;
     }
-
-//    public User(String username, String password, String email, boolean enabled, Role roleId) throws IOException {
-//        this.username = username;
-//        this.password = password;
-//        this.email = email;
-//        this.enabled = enabled;
-//        this.roleId = roleId;
-//    }
-
 
     public int getId() {
         return id;

@@ -1,17 +1,12 @@
 package com.example.autoforum.comment;
 
-import com.example.autoforum.post.Post;
-import com.example.autoforum.post.PostDTO;
 import com.example.autoforum.post.PostService;
-import com.example.autoforum.user.User;
 import com.example.autoforum.user.UserService;
-import com.example.autoforum.user.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -19,7 +14,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class CommentController {
@@ -113,32 +107,6 @@ public class CommentController {
             return ResponseEntity.created(location).build();
         }
     }
-
-//    @PostMapping(path = "/comment", consumes = "application/json")
-//    public ResponseEntity<?> addComment(@RequestBody Comment comment) throws URISyntaxException {
-//        LOGGER.info(comment.toString());
-//        if (comment == null) {
-//            return ResponseEntity.unprocessableEntity().build();
-//        } else {
-//            URI location = new URI("http://www.concretepage.com/");
-//            commentService.addComment(comment);
-//            return ResponseEntity.created(location).build();
-//        }
-//    }
-
-//    @PutMapping(path = "/user/{id}", consumes = "multipart/form-data")
-//    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
-//        User existingUser = userService.getUser(id);
-//        if (existingUser == null) {
-//            return ResponseEntity.notFound().build();
-//        } else {
-//            user.setPicture(picture.getBytes());
-//            LOGGER.info(user.toString());
-//            user.setId(id);
-//            userService.updateUser(id, user);
-//            return ResponseEntity.ok().build();
-//        }
-//    }
 
     @PutMapping(path = "/comment", consumes = "multipart/form-data")
     public ResponseEntity<?> updateComment(@RequestPart Comment comment, @RequestParam int id) {

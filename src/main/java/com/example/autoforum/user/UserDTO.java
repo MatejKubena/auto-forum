@@ -7,7 +7,6 @@ public class UserDTO {
     private String username;
     private String email;
     private byte[] picture;
-//    private String role;
     private Timestamp createdAt;
 
 

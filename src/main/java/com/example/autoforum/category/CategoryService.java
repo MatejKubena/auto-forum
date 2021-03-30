@@ -1,6 +1,5 @@
 package com.example.autoforum.category;
 
-import com.example.autoforum.post.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

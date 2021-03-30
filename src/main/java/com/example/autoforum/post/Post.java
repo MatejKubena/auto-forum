@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "post")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID")
 public class Post {
 
     @Id

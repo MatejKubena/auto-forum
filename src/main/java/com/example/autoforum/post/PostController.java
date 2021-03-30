@@ -1,20 +1,11 @@
 package com.example.autoforum.post;
 
-import com.example.autoforum.category.Category;
 import com.example.autoforum.category.CategoryService;
-import com.example.autoforum.user.UserDTO;
 import com.example.autoforum.user.UserService;
-import com.example.autoforum.comment.Comment;
-import com.example.autoforum.comment.CommentController;
-import com.example.autoforum.user.User;
-import org.aspectj.bridge.MessageUtil;
-import org.hibernate.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -159,19 +150,6 @@ public class PostController {
         }
     }
 
-//    @PostMapping(path = "/comment", consumes = "multipart/form-data")
-//    public ResponseEntity<?> addComment(@RequestPart Comment comment) throws URISyntaxException {
-//        LOGGER.info(comment.toString());
-//        if (comment == null) {
-//            return ResponseEntity.unprocessableEntity().build();
-//        } else {
-//            LOGGER.info(comment.toString());
-//            URI location = new URI("http://www.concretepage.com/");
-//            commentService.addComment(comment);
-//            return ResponseEntity.created(location).build();
-//        }
-//    }
-
     @PostMapping(path = "/post", consumes = "multipart/form-data")
     public ResponseEntity<?> addUser(@RequestPart Post post) throws URISyntaxException {
         if (post == null) {
@@ -183,17 +161,6 @@ public class PostController {
             return ResponseEntity.created(location).build();
         }
     }
-
-//    @PostMapping(path = "/post", consumes = "application/json")
-//    public ResponseEntity<?> addUser(@RequestBody Post post) throws URISyntaxException {
-//        if (post == null) {
-//            return ResponseEntity.unprocessableEntity().build();
-//        } else {
-//            URI location = new URI("http://www.concretepage.com/");
-//            postService.addPost(post);
-//            return ResponseEntity.created(location).build();
-//        }
-//    }
 
     @PutMapping(path = "/post", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUser(@RequestPart Post post, @RequestParam int id) {
