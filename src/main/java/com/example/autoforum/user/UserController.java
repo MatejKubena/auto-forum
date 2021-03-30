@@ -200,7 +200,7 @@ public class UserController {
     }
 
     // potom zmenit na POST
-    @GetMapping(path = "/favorite")
+    @PostMapping(path = "/favorite")
     public ResponseEntity<?> makeFavorite(@RequestParam int userId, @RequestParam int postId) {
         //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         //User user = (User) auth.getDetails();
