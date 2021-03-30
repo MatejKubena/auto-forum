@@ -1,6 +1,7 @@
 package com.example.autoforum.post;
 
 import com.example.autoforum.category.Category;
+import com.example.autoforum.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,9 @@ public class PostService {
 
     public List<Post> getAllPostsByCategoryId(Category category) {
         return new ArrayList<>(postRepository.findPostsByCategoryId(category));
+    }
+
+    public List<Post> getAllPostsByUserId(User user) {
+        return new ArrayList<>(postRepository.findPostsByUserId(user));
     }
 }

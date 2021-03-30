@@ -2,6 +2,8 @@ package com.example.autoforum.post;
 
 import com.example.autoforum.category.Category;
 import com.example.autoforum.category.CategoryService;
+import com.example.autoforum.user.UserDTO;
+import com.example.autoforum.user.UserService;
 import com.example.autoforum.comment.Comment;
 import com.example.autoforum.comment.CommentController;
 import com.example.autoforum.user.User;
@@ -28,66 +30,132 @@ public class PostController {
 
     private final PostService postService;
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Autowired
-    public PostController(PostService postService, CategoryService categoryService) {
+    public PostController(PostService postService, CategoryService categoryService, UserService userService) {
         this.postService = postService;
         this.categoryService = categoryService;
+        this.userService = userService;
 
     }
 
     @GetMapping(path = "/posts", produces = "application/json")
     public ResponseEntity<?> getPosts() {
+
+        List<Post> postList = postService.getAllPosts();
+        ArrayList<PostDTO> postListDTO = new ArrayList<>();
+
         if (postService.getAllPosts() == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(postService.getAllPosts());
+
+            for (var postInstance: postList) {
+                PostDTO postDTO = new PostDTO();
+                postDTO.setId(postInstance.getId());
+                postDTO.setTitle(postInstance.getTitle());
+                postDTO.setDescription(postInstance.getDescription());
+                postDTO.setCreatedAt(postInstance.getCreatedAt());
+                postDTO.setUpdatedAt(postInstance.getUpdatedAt());
+                postListDTO.add(postDTO);
+            }
+
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(postListDTO);
         }
     }
 
-    @GetMapping(path = "/posts/category/{id}", produces = "application/json")
-    public ResponseEntity<?> getPostsCat(@PathVariable int id) {
+    @GetMapping(path = "/posts/category", produces = "application/json")
+    public ResponseEntity<?> getPostsCat(@RequestParam int id) {
+
+        List<Post> postList = postService.getAllPostsByCategoryId(categoryService.getCategory(id));
+        ArrayList<PostDTO> postListDTO = new ArrayList<>();
+
         if (postService.getAllPostsByCategoryId(categoryService.getCategory(id)) == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(postService.getAllPostsByCategoryId(categoryService.getCategory(id)));
+
+            for (var postInstance: postList) {
+                PostDTO postDTO = new PostDTO();
+                postDTO.setId(postInstance.getId());
+                postDTO.setTitle(postInstance.getTitle());
+                postDTO.setDescription(postInstance.getDescription());
+                postDTO.setCreatedAt(postInstance.getCreatedAt());
+                postDTO.setUpdatedAt(postInstance.getUpdatedAt());
+                postListDTO.add(postDTO);
+            }
+
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(postListDTO);
         }
     }
 
-    @GetMapping(path = "/posts/{id}", produces = "application/json")
-    public ResponseEntity<?> getMyPosts(@PathVariable int id) {
-        if (postService.getAllPosts() == null) {
+    @GetMapping(path = "/myposts", produces = "application/json")
+    public ResponseEntity<?> getMyPosts(@RequestParam int id) {
+
+        List<Post> postList = postService.getAllPostsByUserId(userService.getUser(id));
+        ArrayList<PostDTO> postListDTO = new ArrayList<>();
+
+        if (postService.getAllPostsByUserId(userService.getUser(id)) == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(postService.getAllPosts());
+
+            for (var postInstance: postList) {
+                PostDTO postDTO = new PostDTO();
+                postDTO.setId(postInstance.getId());
+                postDTO.setTitle(postInstance.getTitle());
+                postDTO.setDescription(postInstance.getDescription());
+                postDTO.setCreatedAt(postInstance.getCreatedAt());
+                postDTO.setUpdatedAt(postInstance.getUpdatedAt());
+                postListDTO.add(postDTO);
+            }
+
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(postListDTO);
         }
     }
 
-    @GetMapping(path = "/post/{id}", produces = "application/json")
-    public ResponseEntity<?> getPost(@PathVariable int id) {
+    @GetMapping(path = "/post", produces = "application/json")
+    public ResponseEntity<?> getPost(@RequestParam int id) {
+
+        Post post = postService.getPost(id);
+
         if (postService.getPost(id) == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(postService.getPost(id));
+
+            PostDTO postDTO = new PostDTO();
+            postDTO.setId(post.getId());
+            postDTO.setTitle(post.getTitle());
+            postDTO.setDescription(post.getDescription());
+            postDTO.setCreatedAt(post.getCreatedAt());
+            postDTO.setUpdatedAt(post.getUpdatedAt());
+
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(postDTO);
         }
     }
 
-    @GetMapping(path = "/search/{param}", produces = "application/json")
-    public ResponseEntity<?> getSearch(@PathVariable String param) {
+    @GetMapping(path = "/search", produces = "application/json")
+    public ResponseEntity<?> getSearch(@RequestParam String param) {
 
         List<Post> allPostsCompare = postService.getAllPosts();
-        ArrayList<Post> tempPostsCompare = new ArrayList<>();
+        ArrayList<PostDTO> postListDTO = new ArrayList<>();
 
         for (var postInstance: allPostsCompare) {
             if (postInstance.getTitle().toLowerCase().contains(param.toLowerCase())) {
-                tempPostsCompare.add(postInstance);
+
+                PostDTO postDTO = new PostDTO();
+                postDTO.setId(postInstance.getId());
+                postDTO.setTitle(postInstance.getTitle());
+                postDTO.setDescription(postInstance.getDescription());
+                postDTO.setCreatedAt(postInstance.getCreatedAt());
+                postDTO.setUpdatedAt(postInstance.getUpdatedAt());
+
+                postListDTO.add(postDTO);
             }
         }
 
-        if (tempPostsCompare.isEmpty()) {
+        if (postListDTO.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(tempPostsCompare);
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(postListDTO);
         }
     }
 
@@ -127,11 +195,21 @@ public class PostController {
 //        }
 //    }
 
-    @PutMapping(path = "/post/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateUser(@RequestPart Post post, @PathVariable int id) {
+    @PutMapping(path = "/post", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateUser(@RequestPart Post post, @RequestParam int id) {
+
         if (post == null) {
             return ResponseEntity.unprocessableEntity().build();
         } else {
+
+            List<Post> allPostsCompare = postService.getAllPosts();
+
+            for (var postInstance: allPostsCompare) {
+                if (postInstance.getId() == id) {
+                    post.setCreatedAt(postInstance.getCreatedAt());
+                }
+            }
+
             LOGGER.info(post.toString());
             post.setId(id);
             postService.updatePost(id, post);
@@ -139,8 +217,8 @@ public class PostController {
         }
     }
 
-    @DeleteMapping(path = "/post/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+    @DeleteMapping(path = "/post")
+    public ResponseEntity<?> deleteUser(@RequestParam int id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }

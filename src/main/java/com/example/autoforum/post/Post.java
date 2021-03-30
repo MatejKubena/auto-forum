@@ -3,10 +3,7 @@ package com.example.autoforum.post;
 import com.example.autoforum.category.Category;
 import com.example.autoforum.comment.Comment;
 import com.example.autoforum.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,7 +27,7 @@ public class Post {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
     @JsonBackReference(value="user-post")
     private User userId;
@@ -39,13 +36,14 @@ public class Post {
     @JsonManagedReference(value="post-comment")
     private Set<Comment> comments;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name="category_id", nullable = false)
     @JsonBackReference(value="category-post")
     private Category categoryId;
 
-//    @ManyToMany(mappedBy = "favoritePosts")
-//    private Set<User> favorites;
+    @ManyToMany(mappedBy = "favoritePosts")
+    @JsonIgnoreProperties("favoritePosts")
+    private Set<User> favorites;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -86,13 +84,13 @@ public class Post {
         this.description = description;
     }
 
-//    public Set<User> getFavorites() {
-//        return favorites;
-//    }
-//
-//    public void setFavorites(Set<User> favorites) {
-//        this.favorites = favorites;
-//    }
+    public Set<User> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<User> favorites) {
+        this.favorites = favorites;
+    }
 
     public User getUserId() {
         return userId;

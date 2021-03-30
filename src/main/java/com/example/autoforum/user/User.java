@@ -5,10 +5,7 @@ import javax.persistence.*;
 import com.example.autoforum.comment.Comment;
 import com.example.autoforum.role.Role;
 import com.example.autoforum.post.Post;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,12 +54,13 @@ public class User {
     @JsonManagedReference(value="user-comment")
     private Set<Comment> comments;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "favorite",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "post_id"))
-//    private Set<Post> favoritePosts;
+    @ManyToMany
+    @JoinTable(
+            name = "favorite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @JsonIgnoreProperties("favorites")
+    private Set<Post> favoritePosts;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -164,13 +162,13 @@ public class User {
         this.comments = comments;
     }
 
-//    public Set<Post> getFavoritePosts() {
-//        return favoritePosts;
-//    }
-//
-//    public void setFavoritePosts(Set<Post> favoritePosts) {
-//        this.favoritePosts = favoritePosts;
-//    }
+    public Set<Post> getFavoritePosts() {
+        return favoritePosts;
+    }
+
+    public void setFavoritePosts(Set<Post> favoritePosts) {
+        this.favoritePosts = favoritePosts;
+    }
 
     public Timestamp getCreatedAt() {
         return createdAt;

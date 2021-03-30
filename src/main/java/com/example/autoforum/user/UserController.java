@@ -35,14 +35,45 @@ public class UserController {
         this.postService = postService;
     }
 
-    @GetMapping(path = "/user/?id={id}", produces = "application/json")
-    public ResponseEntity<?> getUser(@PathVariable int id) {
-        if (userService.getUser(id) == null) {
+    @GetMapping(path = "/user", produces = "application/json")
+    public ResponseEntity<?> getUser(@RequestParam int id) {
+        User user = userService.getUser(id);
+        if (user == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(userService.getUser(id));
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPicture(user.getPicture());
+            userDTO.setCreatedAt(user.getCreatedAt());
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(userDTO);
         }
     }
+
+//    @GetMapping(path = "/user/{id}", produces = "application/json")
+//    public ResponseEntity<?> getUser(@PathVariable int id) {
+//        User user = userService.getUser(id);
+//        if (user == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            UserDTO userDTO = new UserDTO();
+//            userDTO.setId(user.getId());
+//            userDTO.setUsername(user.getUsername());
+//            userDTO.setEmail(user.getEmail());
+//            userDTO.setPicture(user.getPicture());
+//            userDTO.setCreatedAt(user.getCreatedAt());
+//            return ResponseEntity.ok().header("Content-Type", "application/json").body(userDTO);
+//        }
+//    }
+//    @GetMapping(path = "/user/{id}", produces = "application/json")
+//    public ResponseEntity<?> getUser(@PathVariable int id) {
+//        if (userService.getUser(id) == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            return ResponseEntity.ok().header("Content-Type", "application/json").body(userService.getUser(id));
+//        }
+//    }
 
     @GetMapping(path = "/login", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<?> getUserLogin(@RequestPart String usernameLogin, @RequestPart String passwordLogin) {
@@ -118,8 +149,8 @@ public class UserController {
 //        }
 //    }
 
-    @PutMapping(path = "/user/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
+    @PutMapping(path = "/user", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateUser(@RequestParam int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
 //        User existingUser = userService.getUser(id);
 //        if (existingUser == null) {
 //            return ResponseEntity.notFound().build();
@@ -136,6 +167,9 @@ public class UserController {
         for (var userInstance: allUsersCompare) {
             if (!(userInstance.getId() == id) && (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername()))) {
                 return ResponseEntity.unprocessableEntity().build();
+            }
+            if (userInstance.getId() == id) {
+                user.setCreatedAt(userInstance.getCreatedAt());
             }
         }
 
@@ -159,33 +193,45 @@ public class UserController {
 //        }
 //    }
 
-    @DeleteMapping(path = "/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+    @DeleteMapping(path = "/user")
+    public ResponseEntity<?> deleteUser(@RequestParam int id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     // potom zmenit na POST
-//    @GetMapping(path = "/favorites/{userId}/{postId}")
-//    public ResponseEntity<?> makeFavorite(@PathVariable int userId, @PathVariable int postId) {
-//        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        //User user = (User) auth.getDetails();
-//        User user = userService.getUser(userId);
-//        Post post = postService.getPost(postId);
-//
-//        user.getFavoritePosts().add(post);
-//        userService.updateUser(userId, user);
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping(path = "/favorites/{userId}")
-//    public ResponseEntity<?> getFavorites(@PathVariable int userId) {
-//        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user = userService.getUser(userId);
-//
-//        return ResponseEntity.ok().header("Content-Type", "application/json").body(user.getFavoritePosts());
-//    }
+    @GetMapping(path = "/favorite")
+    public ResponseEntity<?> makeFavorite(@RequestParam int userId, @RequestParam int postId) {
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User user = (User) auth.getDetails();
+        User user = userService.getUser(userId);
+        Post post = postService.getPost(postId);
+
+        user.getFavoritePosts().add(post);
+        userService.updateUser(userId, user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/favorites")
+    public ResponseEntity<?> getFavorites(@RequestParam int userId) {
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUser(userId);
+
+        return ResponseEntity.ok().header("Content-Type", "application/json").body(user.getFavoritePosts());
+    }
+
+    @DeleteMapping(path = "/favorite")
+    public ResponseEntity<?> deleteFavorite(@RequestParam int userId, @RequestParam int postId) {
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUser(userId);
+        Post post = postService.getPost(postId);
+
+        user.getFavoritePosts().remove(post);
+        userService.updateUser(userId, user);
+
+        return ResponseEntity.noContent().build();
+    }
 
 
 //    //PROFILES - VIEW

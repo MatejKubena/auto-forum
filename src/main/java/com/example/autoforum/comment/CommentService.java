@@ -1,5 +1,6 @@
 package com.example.autoforum.comment;
 
+import com.example.autoforum.post.Post;
 import com.example.autoforum.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,9 @@ public class CommentService {
 
     public List<Comment> getAllCommentsByUserId(User user) {
         return new ArrayList<>(commentRepository.findCommentsByUserId(user));
+    }
+
+    public List<Comment> getAllCommentsByPostId(Post post) {
+        return new ArrayList<>(commentRepository.findCommentsByPostId(post));
     }
 }
