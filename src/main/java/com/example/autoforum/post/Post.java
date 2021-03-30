@@ -31,7 +31,7 @@ public class Post {
     @JsonBackReference(value="user-post")
     private User userId;
 
-    @OneToMany(mappedBy="postId")
+    @OneToMany(mappedBy="postId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference(value="post-comment")
     private Set<Comment> comments;
 
