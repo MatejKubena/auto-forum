@@ -28,4 +28,8 @@ public class RoleService {
     public void deleteRole(int id) {
         roleRepository.deleteById(id);
     }
+
+    public Role getRoleByName(String name) {
+        return roleRepository.findRoleByName(name);
+    }
 }

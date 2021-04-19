@@ -50,7 +50,7 @@ public class User {
     @JsonManagedReference(value="user-comment")
     private Set<Comment> comments;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "favorite",
             joinColumns = @JoinColumn(name = "user_id"),

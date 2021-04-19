@@ -3,17 +3,25 @@ package com.example.autoforum.user;
 import com.example.autoforum.comment.CommentController;
 import com.example.autoforum.post.Post;
 import com.example.autoforum.post.PostService;
+import com.example.autoforum.role.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -23,11 +31,13 @@ public class UserController {
 
     private final UserService userService;
     private final PostService postService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService, PostService postService) {
+    public UserController(UserService userService, PostService postService, RoleService roleService) {
         this.userService = userService;
         this.postService = postService;
+        this.roleService = roleService;
     }
 
     @GetMapping(path = "/user", produces = "application/json")
@@ -79,8 +89,42 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
-    @PostMapping(path = "/register", consumes = "multipart/form-data")
-    public ResponseEntity<?> addUserRegister(@RequestPart User user, @RequestPart MultipartFile picture) throws URISyntaxException, IOException {
+//    @PostMapping(path = "/register", consumes = "multipart/form-data")
+//    public ResponseEntity<?> addUserRegister(@RequestPart User user, @RequestPart MultipartFile picture) throws URISyntaxException, IOException {
+//
+//        List<User> allUsersCompare = userService.getAllUsers();
+//
+//        for (var userInstance: allUsersCompare) {
+//            if (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername())) {
+//                return ResponseEntity.unprocessableEntity().build();
+//            }
+//        }
+//
+//        user.setPicture(picture.getBytes());
+//        LOGGER.info(user.toString());
+//
+//        URI location = new URI("http://www.concretepage.com/");
+//        userService.addUser(user);
+//        return ResponseEntity.created(location).build();
+//    }
+
+    @PostMapping(path = "/register", consumes = "application/json")
+    public ResponseEntity<?> addUserRegister(@RequestBody User user) throws URISyntaxException, IOException {
+
+//        Resource resource = new ClassPathResource("user_default_icon.png");
+//
+//        InputStream input = resource.getInputStream();
+//
+//        File file = resource.getFile();
+
+        String filename="src\\main\\resources\\static\\images\\user_default_icon.png";
+        Path pathToFile = Paths.get(filename);
+//        System.out.println(pathToFile.toAbsolutePath());
+//
+//        String filePath = "D:\\Dokumenty\\lSkola\\6. Semester\\MTAA\\Zadanie\\auto-forum\\src\\main\\resources\\static\\images\\user_default_icon.png";
+
+        // file to byte[], Path
+        byte[] bytes = Files.readAllBytes(Paths.get(pathToFile.toAbsolutePath().toString()));
 
         List<User> allUsersCompare = userService.getAllUsers();
 
@@ -90,7 +134,9 @@ public class UserController {
             }
         }
 
-        user.setPicture(picture.getBytes());
+        user.setEnabled(true);
+        user.setRoleId(roleService.getRoleByName("user"));
+        user.setPicture(bytes);
         LOGGER.info(user.toString());
 
         URI location = new URI("http://www.concretepage.com/");
