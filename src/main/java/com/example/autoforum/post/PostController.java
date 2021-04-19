@@ -150,8 +150,8 @@ public class PostController {
         }
     }
 
-    @PostMapping(path = "/post", consumes = "multipart/form-data")
-    public ResponseEntity<?> addUser(@RequestPart Post post) throws URISyntaxException {
+    @PostMapping(path = "/post", consumes = "application/json")
+    public ResponseEntity<?> addUser(@RequestBody Post post) throws URISyntaxException {
         if (post == null) {
             return ResponseEntity.unprocessableEntity().build();
         } else {
@@ -162,8 +162,8 @@ public class PostController {
         }
     }
 
-    @PutMapping(path = "/post", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateUser(@RequestPart Post post, @RequestParam int id) {
+    @PutMapping(path = "/post", consumes = "application/json")
+    public ResponseEntity<?> updateUser(@RequestBody Post post, @RequestParam int id) {
 
         if (post == null) {
             return ResponseEntity.unprocessableEntity().build();

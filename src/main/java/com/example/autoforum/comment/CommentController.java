@@ -96,8 +96,8 @@ public class CommentController {
         }
     }
 
-    @PostMapping(path = "/comment", consumes = "multipart/form-data")
-    public ResponseEntity<?> addComment(@RequestPart Comment comment) throws URISyntaxException {
+    @PostMapping(path = "/comment", consumes = "application/json")
+    public ResponseEntity<?> addComment(@RequestBody Comment comment) throws URISyntaxException {
         if (comment == null) {
             return ResponseEntity.unprocessableEntity().build();
         } else {
@@ -108,8 +108,8 @@ public class CommentController {
         }
     }
 
-    @PutMapping(path = "/comment", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateComment(@RequestPart Comment comment, @RequestParam int id) {
+    @PutMapping(path = "/comment", consumes = "application/json")
+    public ResponseEntity<?> updateComment(@RequestBody Comment comment, @RequestParam int id) {
         if (comment == null) {
             return ResponseEntity.unprocessableEntity().build();
         } else {
