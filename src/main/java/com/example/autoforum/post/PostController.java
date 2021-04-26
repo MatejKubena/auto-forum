@@ -114,6 +114,7 @@ public class PostController {
 
             PostDTO postDTO = new PostDTO();
             postDTO.setId(post.getId());
+            postDTO.setUserId(post.getUserId());
             postDTO.setTitle(post.getTitle());
             postDTO.setDescription(post.getDescription());
             postDTO.setCreatedAt(post.getCreatedAt());

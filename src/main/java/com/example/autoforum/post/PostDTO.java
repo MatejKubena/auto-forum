@@ -1,9 +1,12 @@
 package com.example.autoforum.post;
 
+import com.example.autoforum.user.User;
+
 import java.sql.Timestamp;
 
 public class PostDTO {
     private int id;
+    private User userId;
     private String title;
     private String description;
     private Timestamp createdAt;
@@ -15,6 +18,14 @@ public class PostDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
