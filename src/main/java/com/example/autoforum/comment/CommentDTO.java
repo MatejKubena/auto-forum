@@ -1,10 +1,13 @@
 package com.example.autoforum.comment;
 
+import com.example.autoforum.user.User;
+
 import java.sql.Timestamp;
 
 public class CommentDTO {
 
     private int id;
+    private User userId;
     private String description;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -15,6 +18,14 @@ public class CommentDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     public String getDescription() {

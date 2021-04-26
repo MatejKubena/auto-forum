@@ -2,6 +2,7 @@ package com.example.autoforum.post;
 
 import com.example.autoforum.category.CategoryService;
 import com.example.autoforum.user.UserService;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,8 @@ public class PostController {
             LOGGER.info(post.toString());
             URI location = new URI("http://www.concretepage.com/");
             postService.addPost(post);
-            return ResponseEntity.created(location).build();
+            JSONObject jsonObject = new JSONObject();
+            return ResponseEntity.created(location).body(jsonObject);
         }
     }
 

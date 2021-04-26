@@ -47,13 +47,14 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         } else {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setUsername(user.getUsername());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setPicture(user.getPicture());
-            userDTO.setCreatedAt(user.getCreatedAt());
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(userDTO);
+//            UserDTO userDTO = new UserDTO();
+//            userDTO.setId(user.getId());
+//            userDTO.setUsername(user.getUsername());
+//            userDTO.setEmail(user.getEmail());
+//            userDTO.setPicture(user.getPicture());
+//            userDTO.setCreatedAt(user.getCreatedAt());
+//            return ResponseEntity.ok().header("Content-Type", "application/json").body(userDTO);
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(user);
         }
     }
 

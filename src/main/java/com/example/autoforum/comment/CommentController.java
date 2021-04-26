@@ -2,6 +2,7 @@ package com.example.autoforum.comment;
 
 import com.example.autoforum.post.PostService;
 import com.example.autoforum.user.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -67,6 +68,7 @@ public class CommentController {
             for (var commentInstance: commentList) {
                 CommentDTO commentDTO = new CommentDTO();
                 commentDTO.setId(commentInstance.getId());
+                commentDTO.setUserId(commentInstance.getUserId());
                 commentDTO.setDescription(commentInstance.getDescription());
                 commentDTO.setCreatedAt(commentInstance.getCreatedAt());
                 commentDTO.setUpdatedAt(commentInstance.getUpdatedAt());
@@ -86,13 +88,15 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         } else {
 
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setId(comment.getId());
-            commentDTO.setDescription(comment.getDescription());
-            commentDTO.setCreatedAt(comment.getCreatedAt());
-            commentDTO.setUpdatedAt(comment.getUpdatedAt());
+//            CommentDTO commentDTO = new CommentDTO();
+//            commentDTO.setId(comment.getId());
+//            commentDTO.setDescription(comment.getDescription());
+//            commentDTO.setCreatedAt(comment.getCreatedAt());
+//            commentDTO.setUpdatedAt(comment.getUpdatedAt());
+//
+//            return ResponseEntity.ok().header("Content-Type", "application/json").body(commentDTO);
 
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(commentDTO);
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(comment);
         }
     }
 
@@ -104,7 +108,8 @@ public class CommentController {
             LOGGER.info(comment.toString());
             URI location = new URI("http://www.concretepage.com/");
             commentService.addComment(comment);
-            return ResponseEntity.created(location).build();
+            JSONObject jsonObject = new JSONObject();
+            return ResponseEntity.created(location).body(jsonObject);
         }
     }
 
@@ -125,7 +130,9 @@ public class CommentController {
             LOGGER.info(comment.toString());
             comment.setId(id);
             commentService.updateComment(id, comment);
-            return ResponseEntity.ok().build();
+
+            JSONObject jsonObject = new JSONObject();
+            return ResponseEntity.ok().body(jsonObject);
         }
     }
 
