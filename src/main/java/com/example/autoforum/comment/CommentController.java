@@ -76,6 +76,8 @@ public class CommentController {
             }
 
             return ResponseEntity.ok().header("Content-Type", "application/json").body(commentListDTO);
+
+
         }
     }
 
@@ -88,15 +90,16 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         } else {
 
-//            CommentDTO commentDTO = new CommentDTO();
-//            commentDTO.setId(comment.getId());
-//            commentDTO.setDescription(comment.getDescription());
-//            commentDTO.setCreatedAt(comment.getCreatedAt());
-//            commentDTO.setUpdatedAt(comment.getUpdatedAt());
-//
-//            return ResponseEntity.ok().header("Content-Type", "application/json").body(commentDTO);
+            CommentDTO commentDTO = new CommentDTO();
+            commentDTO.setId(comment.getId());
+            commentDTO.setUserId(comment.getUserId());
+            commentDTO.setDescription(comment.getDescription());
+            commentDTO.setCreatedAt(comment.getCreatedAt());
+            commentDTO.setUpdatedAt(comment.getUpdatedAt());
 
-            return ResponseEntity.ok().header("Content-Type", "application/json").body(comment);
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(commentDTO);
+
+//            return ResponseEntity.ok().header("Content-Type", "application/json").body(comment);
         }
     }
 

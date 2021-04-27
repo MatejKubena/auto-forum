@@ -102,23 +102,24 @@ public class UserController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping(path = "/getPass", produces = "application/json")
+    public ResponseEntity<?> getUserPass(@RequestParam int id) {
+
+        User newUser = userService.getUser(id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("password", newUser.getPassword());
+
+        return ResponseEntity.ok().header("Content-Type", "application/json").body(jsonObject.toString());
+
+    }
+
 
     @PostMapping(path = "/register", consumes = "application/json")
     public ResponseEntity<?> addUserRegister(@RequestBody User user) throws URISyntaxException, IOException {
 
-//        Resource resource = new ClassPathResource("user_default_icon.png");
-//
-//        InputStream input = resource.getInputStream();
-//
-//        File file = resource.getFile();
-
         String filename="src\\main\\resources\\static\\images\\user_default_icon.png";
         Path pathToFile = Paths.get(filename);
-//        System.out.println(pathToFile.toAbsolutePath());
-//
-//        String filePath = "D:\\Dokumenty\\lSkola\\6. Semester\\MTAA\\Zadanie\\auto-forum\\src\\main\\resources\\static\\images\\user_default_icon.png";
 
-        // file to byte[], Path
         byte[] bytes = Files.readAllBytes(Paths.get(pathToFile.toAbsolutePath().toString()));
 
         List<User> allUsersCompare = userService.getAllUsers();
@@ -136,7 +137,9 @@ public class UserController {
 
         URI location = new URI("http://www.concretepage.com/");
         userService.addUser(user);
-        return ResponseEntity.created(location).build();
+
+        JSONObject jsonObject = new JSONObject();
+        return ResponseEntity.created(location).body(jsonObject);
     }
 
     @PostMapping(path = "/user", consumes = "multipart/form-data")
@@ -155,8 +158,35 @@ public class UserController {
 
         URI location = new URI("http://www.concretepage.com/");
         userService.addUser(user);
-        return ResponseEntity.created(location).build();
+
+        JSONObject jsonObject = new JSONObject();
+        return ResponseEntity.created(location).body(jsonObject);
     }
+
+    @PutMapping(path = "/changePicture", consumes = "application/json")
+    public ResponseEntity<?> changePicture(@RequestBody User user) {
+        User newUser = userService.getUser(user.getId());
+        newUser.setPicture(user.getPicture());
+        userService.updateUser(user.getId(), newUser);
+        LOGGER.info("Picture changed!");
+
+        JSONObject jsonObject  = new JSONObject();
+        return ResponseEntity.ok().header("Content-Type", "application/json").body(jsonObject.toString());
+    }
+
+    @PutMapping(path = "/user", consumes = "application/json")
+    public ResponseEntity<?> updateUser(@RequestParam int id, @RequestBody User user) {
+
+        User newUser = userService.getUser(id);
+        newUser.setUsername(user.getUsername());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword());
+        userService.updateUser(user.getId(), newUser);
+
+        JSONObject jsonObject = new JSONObject();
+        return ResponseEntity.ok().body(jsonObject);
+    }
+
 
 //    @PostMapping(path = "/register", consumes = "multipart/form-data")
 //    public ResponseEntity<?> addUserRegister(@RequestPart User user, @RequestPart MultipartFile picture) throws URISyntaxException, IOException {
@@ -213,26 +243,29 @@ public class UserController {
 //        return ResponseEntity.created(location).build();
 //    }
 
-    @PutMapping(path = "/user", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateUser(@RequestParam int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
+//    @PutMapping(path = "/user", consumes = "multipart/form-data")
+//    public ResponseEntity<?> updateUser(@RequestParam int id, @RequestPart User user, @RequestPart MultipartFile picture) throws IOException {
+//
+//        List<User> allUsersCompare = userService.getAllUsers();
+//
+//        for (var userInstance: allUsersCompare) {
+//            if (!(userInstance.getId() == id) && (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername()))) {
+//                return ResponseEntity.unprocessableEntity().build();
+//            }
+//            if (userInstance.getId() == id) {
+//                user.setCreatedAt(userInstance.getCreatedAt());
+//            }
+//        }
+//
+//        user.setPicture(picture.getBytes());
+//        LOGGER.info(user.toString());
+//        user.setId(id);
+//        userService.updateUser(id, user);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        return ResponseEntity.ok().body(jsonObject);
+//    }
 
-        List<User> allUsersCompare = userService.getAllUsers();
-
-        for (var userInstance: allUsersCompare) {
-            if (!(userInstance.getId() == id) && (userInstance.getEmail().equals(user.getEmail()) || userInstance.getUsername().equals(user.getUsername()))) {
-                return ResponseEntity.unprocessableEntity().build();
-            }
-            if (userInstance.getId() == id) {
-                user.setCreatedAt(userInstance.getCreatedAt());
-            }
-        }
-
-        user.setPicture(picture.getBytes());
-        LOGGER.info(user.toString());
-        user.setId(id);
-        userService.updateUser(id, user);
-        return ResponseEntity.ok().build();
-    }
 
     @DeleteMapping(path = "/user")
     public ResponseEntity<?> deleteUser(@RequestParam int id) {
@@ -248,7 +281,9 @@ public class UserController {
         user.getFavoritePosts().add(post);
         userService.updateUser(userId, user);
 
-        return ResponseEntity.ok().build();
+
+        JSONObject jsonObject = new JSONObject();
+        return ResponseEntity.ok().body(jsonObject);
     }
 
     @GetMapping(path = "/favorites")

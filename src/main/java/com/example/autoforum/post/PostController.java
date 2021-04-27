@@ -183,13 +183,18 @@ public class PostController {
             LOGGER.info(post.toString());
             post.setId(id);
             postService.updatePost(id, post);
-            return ResponseEntity.ok().build();
+
+            JSONObject jsonObject = new JSONObject();
+            return ResponseEntity.ok().body(jsonObject);
         }
     }
 
     @DeleteMapping(path = "/post")
     public ResponseEntity<?> deleteUser(@RequestParam int id) {
         postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+
+//        return ResponseEntity.noContent().build();
+        JSONObject jsonObject = new JSONObject();
+        return ResponseEntity.ok().body(jsonObject);
     }
 }
