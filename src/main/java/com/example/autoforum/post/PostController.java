@@ -172,17 +172,26 @@ public class PostController {
             return ResponseEntity.unprocessableEntity().build();
         } else {
 
-            List<Post> allPostsCompare = postService.getAllPosts();
+            Post newPost = postService.getPost(id);
 
-            for (var postInstance: allPostsCompare) {
-                if (postInstance.getId() == id) {
-                    post.setCreatedAt(postInstance.getCreatedAt());
-                }
-            }
+            newPost.setTitle(post.getTitle());
+            newPost.setDescription(post.getDescription());
 
-            LOGGER.info(post.toString());
-            post.setId(id);
-            postService.updatePost(id, post);
+            postService.updatePost(id, newPost);
+
+//            List<Post> allPostsCompare = postService.getAllPosts();
+//
+//            for (var postInstance: allPostsCompare) {
+//                if (postInstance.getId() == id) {
+//                    post.setCreatedAt(postInstance.getCreatedAt());
+//                }
+//            }
+//
+//
+//
+//            LOGGER.info(post.toString());
+////            post.setId(id);
+//            postService.updatePost(id, post);
 
             JSONObject jsonObject = new JSONObject();
             return ResponseEntity.ok().body(jsonObject);
